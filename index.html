@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hotel Booking Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #ff416c, #ff4b2b);
+      color: #fff;
+    }
+    header {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0,0,0,0.3);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.2rem;
+    }
+    header p {
+      margin: 5px 0 0;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 20px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+    }
+    .auth, .search-section, .results {
+      margin-bottom: 30px;
+    }
+    input, button {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin: 8px 0;
+      width: 100%;
+      font-size: 1rem;
+    }
+    button {
+      background: #00c6ff;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #0096cc;
+    }
+    .hotel-card {
+      background: #fff;
+      color: #333;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+      transition: transform 0.3s;
+    }
+    .hotel-card:hover {
+      transform: scale(1.02);
+    }
+    .hotel-card h3 {
+      margin: 0;
+      color: #ff416c;
+    }
+    .hidden {
+      display: none;
+    }
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: rgba(0,0,0,0.2);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🏨 TravelEase Hotel Booking</h1>
+    <p>Book hotels from anywhere with one registration. 100% free usage!</p>
+  </header>
+
+  <div class="container">
+    <!-- Registration & Login -->
+    <div class="auth" id="authSection">
+      <h2>Register / Sign In</h2>
+      <input type="text" id="username" placeholder="Enter Username">
+      <input type="password" id="password" placeholder="Enter Password">
+      <button onclick="register()">Register</button>
+      <button onclick="login()">Sign In</button>
+      <p id="authMsg"></p>
+    </div>
+
+    <!-- Search Hotels -->
+    <div class="search-section hidden" id="searchSection">
+      <h2>Search Hotels</h2>
+      <input type="text" id="placeInput" placeholder="Enter City or Place (e.g. Delhi)">
+      <button onclick="searchHotels()">Search</button>
+    </div>
+
+    <!-- Results -->
+    <div class="results hidden" id="resultsSection">
+      <h2>Available Hotels</h2>
+      <div id="hotelResults"></div>
+    </div>
+  </div>
+
+  <footer>
+    🌍 Free to use demo | TravelEase © 2025
+  </footer>
+
+  <script>
+    // Registration
+    function register() {
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      if (user && pass) {
+        localStorage.setItem('hotelUser', JSON.stringify({user, pass}));
+        document.getElementById('authMsg').innerText = "✅ Registration successful! Please Sign In.";
+      } else {
+        document.getElementById('authMsg').innerText = "⚠️ Enter username and password.";
+      }
+    }
+
+    // Login
+    function login() {
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      const saved = JSON.parse(localStorage.getItem('hotelUser'));
+      if (saved && saved.user === user && saved.pass === pass) {
+        document.getElementById('authSection').classList.add('hidden');
+        document.getElementById('searchSection').classList.remove('hidden');
+        document.getElementById('resultsSection').classList.remove('hidden');
+      } else {
+        document.getElementById('authMsg').innerText = "❌ Invalid credentials or not registered.";
+      }
+    }
+
+    // Demo Hotel Data
+    const hotels = {
+      "Delhi": ["Taj Palace", "The Oberoi", "ITC Maurya"],
+      "Mumbai": ["The Taj Mahal Palace", "JW Marriott Juhu", "Trident Nariman Point"],
+      "Hyderabad": ["Novotel", "ITC Kakatiya", "Park Hyatt"],
+      "Bangalore": ["The Leela Palace", "Taj MG Road", "ITC Gardenia"],
+      "Goa": ["Le Méridien", "Alila Diwa", "Taj Exotica"]
+    };
+
+    // Search Hotels
+    function searchHotels() {
+      const place = document.getElementById('placeInput').value.trim();
+      const resultsDiv = document.getElementById('hotelResults');
+      resultsDiv.innerHTML = "";
+
+      if (hotels[place]) {
+        hotels[place].forEach(hotel => {
+          const card = document.createElement("div");
+          card.className = "hotel-card";
+          card.innerHTML = `<h3>${hotel}</h3> <button onclick="alert('Booked ${hotel}!')">Book Now</button>`;
+          resultsDiv.appendChild(card);
+        });
+      } else {
+        resultsDiv.innerHTML = "<p>No hotels found for this location.</p>";
+      }
+    }
+  </script>
+</body>
+</html>
